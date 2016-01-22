@@ -1,0 +1,16 @@
+{
+  "name": "chrico/chrico-related-posts",
+  "description": "This Plugin adds related posts-Widgets to your theme.",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Chris",
+      "email": "chris@chrico.info",
+      "homepage": "https://www.chrico.info",
+      "role": "developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  }
+}
