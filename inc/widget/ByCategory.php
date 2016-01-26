@@ -2,26 +2,26 @@
 namespace ChriCo\RelatedPosts\Widget;
 
 /**
- * Class ByCategory
+ * Class AuthorPosts
  *
  * @package ChriCo\RelatedPosts\Widget
  */
-class ByCategory extends \WP_Widget {
+class AuthorPosts extends \WP_Widget {
 
 	/**
 	 * Start the widget.
 	 *
-	 * @return ByCategory
+	 * @return AuthorPosts
 	 */
 	public function __construct() {
 
 		parent::__construct(
-			'chrico-related-posts-by-category',
-			_x( 'ChriCo Related Posts By Category', 'widget title', 'chrico-related-posts' ),
+			'chrico-related-posts-author-posts',
+			_x( 'Chrico Author Posts', 'widget title', 'chrico-related-posts' ),
 			array(
-				'classname'   => 'chrico-related-posts-by',
+				'classname'   => 'chrico-related-posts-author-posts',
 				'description' => __(
-					'The widget shows on single pages related posts by category', 'chrico-related-posts'
+					'The widget shows on single pages more posts from the current Author', 'chrico-related-posts'
 				)
 			)
 		);
@@ -39,70 +39,65 @@ class ByCategory extends \WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		// widget should only work on single pages!
+		// showing widget only on single-pages!
 		if ( ! is_single() ) {
 			return;
 		}
-
-		// set post id
-		$post_id = get_the_ID();
-
-		// get current tags
-		$terms = wp_get_post_categories( $post_id );
-
-		if ( ! $terms ) {
+		$author_id = get_the_author_meta( 'ID' );
+		if ( ! $author_id ) {
 			return;
 		}
 
-		// get the term
-		$term = get_term( $terms[ 0 ], 'category' );
-
-		if ( is_wp_error( $term ) ) {
-			return;
-		}
-
-		// set query args
 		$post_args = array(
-			'category__in'         => array( $term->term_id ),
-			'post__not_in'         => array( $post_id ),
-			'posts_per_page'       => $instance[ 'numberposts' ],
-			'ignore_sticky_posts ' => 1
+			"numberposts"  => $instance[ 'numberposts' ],
+			"author"       => $author_id,
+			"post__not_in" => array( get_the_ID() )
 		);
 		$posts     = get_posts( $post_args );
-		if ( empty( $posts ) ) {
+		if ( count( $posts ) < 1 ) {
 			return;
 		}
 
 		// Title
 		if ( empty( $instance[ 'title' ] ) ) {
-			$title = sprintf(
-				__( 'Weitere Beiträge aus %s', 'chrico-related-posts' ),
-				$term->name
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+			$title       = sprintf(
+				__( 'More Posts from %s', 'inpsyde-post-widgets' ),
+				$author_name
 			);
 		} else {
 			$title = $instance[ 'title' ];
 		}
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		// before Widget
-		echo $args[ 'before_widget' ];
+		$output = $args[ 'before_widget' ];
 		if ( $title ) {
-			echo $args[ 'before_title' ] . $title . $args[ 'after_title' ];
+			$output .= $args[ 'before_title' ] . $title . $args[ 'after_title' ];
 		}
-
 		// getting the slug for the classes...
-		$slug = 'chrico-releated-posts-by-category';
+		$slug = 'chrico-related-posts';
 
-		echo '<ul class="' . esc_attr( $slug ) . '-list">';
-		foreach ( $posts as $post ) {
-			echo '<li class="' . esc_attr( $slug ) . '-list-item">';
-			echo '<a rel="nofollow" href="' . get_permalink( $post->ID ) . '">';
-			echo '<span class="' . esc_attr( $slug ) . '-post-title">' . $post->post_title . '</span>';
-			echo '</a>';
-			echo '</li>';
-		}
-		echo '</ul>';
-		echo $args[ 'after_widget' ];
+		$output .= '<ul class="' . esc_attr( $slug . '__list' ) . '">';
+		foreach ( $posts as $post ) :
+
+			$classes = array( esc_attr( $slug . '__item' ) );
+
+			$categories = get_the_category( $post->ID );
+			foreach ( $categories as $category ) :
+				$classes[] = esc_attr( $slug . '__item--' . $category->slug );
+			endforeach;
+
+			$output .= '<li class="' . implode( " ", $classes ) . '">';
+			$output .= '<a class="' . esc_attr( $slug . '__link' ) . '" href="' . get_permalink( $post->ID ) . '">';
+			$output .= '<span class="' . esc_attr( $slug . '__title' ) . '">' . $post->post_title . '</span>';
+			$output .= '</a>';
+			$output .= '</li>';
+
+		endforeach;
+		$output .= '</ul>';
+		$output .= $args[ 'after_widget' ];
+
+		echo $output;
 	}
 
 	/**
@@ -137,8 +132,6 @@ class ByCategory extends \WP_Widget {
 	 */
 	function form( $instance ) {
 
-		global $wp_roles;
-
 		// Defaults
 		$instance = wp_parse_args(
 			(array) $instance,
@@ -147,9 +140,6 @@ class ByCategory extends \WP_Widget {
 				'numberposts' => 6,
 			)
 		);
-
-		$the_title       = esc_attr( $instance[ 'title' ] );
-		$the_numberposts = esc_attr( $instance[ 'numberposts' ] );
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
@@ -159,7 +149,7 @@ class ByCategory extends \WP_Widget {
 				id="<?php echo $this->get_field_id( 'title' ); ?>"
 				name="<?php echo $this->get_field_name( 'title' ); ?>"
 				type="text"
-				value="<?php echo esc_attr( $the_title ); ?>"
+				value="<?php echo esc_attr(  $instance[ 'title' ] ); ?>"
 			/>
 		</p>
 		<p>
@@ -172,7 +162,7 @@ class ByCategory extends \WP_Widget {
 				type="number"
 				min="1"
 				step="1"
-				value="<?php echo esc_attr( $the_numberposts ); ?>"
+				value="<?php echo esc_attr( $instance[ 'numberposts' ] ); ?>"
 				style="width:50px"
 			/>
 		</p>
