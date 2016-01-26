@@ -1,10 +1,10 @@
 <?php
-namespace ChriCo\RelatedPosts\Widget;
+namespace ChriCo\PostWidgets\Widget;
 
 /**
  * Class AuthorPosts
  *
- * @package ChriCo\RelatedPosts\Widget
+ * @package ChriCo\PostWidgets\Widget
  */
 class AuthorPosts extends \WP_Widget {
 
@@ -16,12 +16,12 @@ class AuthorPosts extends \WP_Widget {
 	public function __construct() {
 
 		parent::__construct(
-			'chrico-related-posts-author-posts',
-			_x( 'Chrico Author Posts', 'widget title', 'chrico-related-posts' ),
+			'chrico-post-widgets__author-posts',
+			_x( 'Chrico Author Posts', 'widget title', 'chrico-post-widgets' ),
 			array(
-				'classname'   => 'chrico-related-posts-author-posts',
+				'classname'   => 'chrico-post-widgets__author-posts',
 				'description' => __(
-					'The widget shows on single pages more posts from the current Author', 'chrico-related-posts'
+					'The widget shows on single pages more posts from the current Author', 'chrico-post-widgets'
 				)
 			)
 		);
@@ -31,15 +31,13 @@ class AuthorPosts extends \WP_Widget {
 	/**
 	 * Widget output.
 	 *
-	 * @since     1.0
-	 * @access    public
-	 *
 	 * @param    array $args
 	 * @param    array $instance
+	 *
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
 
-		// showing widget only on single-pages!
 		if ( ! is_single() ) {
 			return;
 		}
@@ -63,7 +61,7 @@ class AuthorPosts extends \WP_Widget {
 		if ( empty( $instance[ 'title' ] ) ) {
 			$author_name = get_the_author_meta( 'display_name', $author_id );
 			$title       = sprintf(
-				__( 'Weitere Beiträge von %s', 'chrico-related-posts' ),
+				__( 'More Posts from %s', 'inpsyde-post-widgets' ),
 				$author_name
 			);
 		} else {
@@ -71,28 +69,32 @@ class AuthorPosts extends \WP_Widget {
 		}
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		// before Widget
-		echo $args[ 'before_widget' ];
+		$output = $args[ 'before_widget' ];
 		if ( $title ) {
-			echo $args[ 'before_title' ] . $title . $args[ 'after_title' ];
+			$output .= $args[ 'before_title' ] . $title . $args[ 'after_title' ];
 		}
 
-		// getting the slug for the classes...
-		$slug = 'chrico-related-posts';
-
-		echo '<ul class="' . esc_attr( $slug ) . '-list">';
+		$output .= '<ul class="' . esc_attr( $this->id_base . '__list' ) . '">';
 		foreach ( $posts as $post ) :
-			$categories = get_the_category( $post->ID );
-			$category   = $categories[ 0 ];
 
-			echo '<li class="' . esc_attr( $slug ) . '-list-item category-' . esc_attr( $category->slug ) . '">';
-			echo '<a rel="nofollow" href="' . get_permalink( $post->ID ) . '">';
-			echo '<span class="' . esc_attr( $slug ) . '-post-title">' . $post->post_title . '</span>';
-			echo '</a>';
-			echo '</li>';
+			$classes = array( esc_attr( $this->id_base . '__item' ) );
+
+			$categories = get_the_category( $post->ID );
+			foreach ( $categories as $category ) :
+				$classes[] = esc_attr( $this->id_base . '__item--' . $category->slug );
+			endforeach;
+
+			$output .= '<li class="' . implode( " ", $classes ) . '">';
+			$output .= '<a class="' . esc_attr( $this->id_base . '__link' ) . '" href="' . get_permalink( $post->ID ) . '">';
+			$output .= '<span class="' . esc_attr( $this->id_base . '__title' ) . '">' . $post->post_title . '</span>';
+			$output .= '</a>';
+			$output .= '</li>';
+
 		endforeach;
-		echo '</ul>';
-		echo $args[ 'after_widget' ];
+		$output .= '</ul>';
+		$output .= $args[ 'after_widget' ];
+
+		echo $output;
 	}
 
 	/**
@@ -127,32 +129,31 @@ class AuthorPosts extends \WP_Widget {
 	 */
 	function form( $instance ) {
 
-		// Defaults
-		$instance = wp_parse_args(
-			(array) $instance,
-			array(
-				'title'       => '',
-				'numberposts' => 6,
-			)
+		$defaults = array(
+			'title'       => '',
+			'numberposts' => 6,
 		);
 
-		$the_title       = esc_attr( $instance[ 'title' ] );
-		$the_numberposts = esc_attr( $instance[ 'numberposts' ] );
+		$instance = wp_parse_args(
+			(array) $instance,
+			$defaults
+		);
+
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
-				<?php _ex( 'Title', 'widget title label', 'chrico-related-posts' ) ?>
+				<?php _ex( 'Title', 'widget title label', 'chrico-post-widgets' ) ?>
 			</label>
 			<input class="widefat"
 				id="<?php echo $this->get_field_id( 'title' ); ?>"
 				name="<?php echo $this->get_field_name( 'title' ); ?>"
 				type="text"
-				value="<?php echo esc_attr( $the_title ); ?>"
+				value="<?php echo esc_attr( $instance[ 'title' ] ); ?>"
 			/>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'numberposts' ); ?>">
-				<?php _e( 'Number of posts to show:', 'chrico-related-posts' ) ?>
+				<?php _e( 'Number of posts to show:', 'chrico-post-widgets' ) ?>
 			</label>
 			<input class="widefat"
 				id="<?php echo $this->get_field_id( 'numberposts' ); ?>"
@@ -160,7 +161,7 @@ class AuthorPosts extends \WP_Widget {
 				type="number"
 				min="1"
 				step="1"
-				value="<?php echo esc_attr( $the_numberposts ); ?>"
+				value="<?php echo esc_attr( $instance[ 'numberposts' ] ); ?>"
 				style="width:50px"
 			/>
 		</p>

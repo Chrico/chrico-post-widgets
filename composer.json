@@ -1,6 +1,6 @@
 {
-  "name": "chrico/chrico-related-posts",
-  "description": "This Plugin adds related posts-Widgets to your theme.",
+  "name": "chrico/chrico-post-widgets",
+  "description": "This Plugin adds related posts-widgets to your theme.",
   "type": "wordpress-plugin",
   "authors": [
     {

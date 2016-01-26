@@ -3,7 +3,7 @@
  * Plugin Name: Chrico Post Widgets
  * Description: This Plugin adds some posts-widgets to your theme.
  * Plugin URI:  https://www.chrico.info
- * Version:     0.1
+ * Version:     1.0
  * Author:      Christian Brückner
  * Author URI:  https://www.chrico.info
  * Licence:     GPLv3
@@ -40,8 +40,8 @@ function run() {
 function register_widgets() {
 
 	// ByCategory
-	include_once( __DIR__ . '/inc/widget/ByCategory.php' );
-	register_widget( '\ChriCo\PostWidgets\Widget\ByCategory' );
+	include_once( __DIR__ . '/inc/widget/RelatedPostsByCategory.php' );
+	register_widget( '\ChriCo\PostWidgets\Widget\RelatedPostsByCategory' );
 
 	// Author Posts
 	include_once( __DIR__ . '/inc/widget/AuthorPosts.php' );
