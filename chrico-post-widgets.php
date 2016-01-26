@@ -3,7 +3,7 @@
  * Plugin Name: Chrico Post Widgets
  * Description: This Plugin adds some posts-widgets to your theme.
  * Plugin URI:  https://www.chrico.info
- * Version:     1.0
+ * Version:     1.1
  * Author:      Christian Brückner
  * Author URI:  https://www.chrico.info
  * Licence:     GPLv3
