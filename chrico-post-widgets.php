@@ -5,6 +5,8 @@
  * Plugin URI:  https://www.chrico.info
  * Version:     1.1
  * Author:      Christian Brückner
+ * Text Domain: chrico-post-widgets
+ * Domain Path: /languages
  * Author URI:  https://www.chrico.info
  * Licence:     GPLv3
  */
@@ -27,6 +29,8 @@ function run() {
 
 	// registering the widgets
 	add_action( 'widgets_init', __NAMESPACE__ . '\register_widgets' );
+
+	load_plugin_textdomain( 'chrico-post-widgets', FALSE, 'chrico-post-widgets/languages' );
 
 }
 

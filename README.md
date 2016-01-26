@@ -18,3 +18,13 @@ This widget shows on `is_single()` more posts from the current author.
 ###  Related Posts By Category
 
 This widget shows on `is_single()` related posts by the current post category.
+
+## Changelog
+
+# 1.1
+* Renamed Plugin.
+* Improved escaping.
+* Added de_DE translations.
+
+# 1.0
+* Init Release.

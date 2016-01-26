@@ -64,7 +64,7 @@ class RelatedPostsByCategory extends \WP_Widget {
 		// Title
 		if ( empty( $instance[ 'title' ] ) ) {
 			$title = sprintf(
-				__( 'Weitere Beiträge aus %s', 'chrico-post-widgets' ),
+				__( 'More posts in %s', 'chrico-post-widgets' ),
 				$term->name
 			);
 		} else {

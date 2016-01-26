@@ -61,7 +61,7 @@ class AuthorPosts extends \WP_Widget {
 		if ( empty( $instance[ 'title' ] ) ) {
 			$author_name = get_the_author_meta( 'display_name', $author_id );
 			$title       = sprintf(
-				__( 'More Posts from %s', 'inpsyde-post-widgets' ),
+				__( 'More posts from %s', 'inpsyde-post-widgets' ),
 				$author_name
 			);
 		} else {
