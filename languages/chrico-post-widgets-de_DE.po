@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Tue Jan 26 2016 09:55:07 GMT+0100 (Mitteleuropäische "
 "Zeit)\n"
-"PO-Revision-Date: Tue Jan 26 2016 10:00:57 GMT+0100 (Mitteleuropäische Zeit)\n"
+"PO-Revision-Date: Tue Jan 26 2016 10:12:46 GMT+0100 (Mitteleuropäische Zeit)\n"
 "Last-Translator: admin <c.brueckner@inpsyde.com>\n"
 "Language-Team: \n"
 "Language: German\n"
@@ -48,11 +48,6 @@ msgstr ""
 msgid "The widget shows on single pages more posts from the current Author"
 msgstr ""
 
-#: ../inc/widget/AuthorPosts.php:64
-#, php-format
-msgid "More posts from %s"
-msgstr "Weitere Beiträge von %s"
-
 #: ../inc/widget/RelatedPostsByCategory.php:20
 msgctxt "widget title"
 msgid "ChriCo Related Posts By Category"
@@ -61,6 +56,11 @@ msgstr ""
 #: ../inc/widget/RelatedPostsByCategory.php:23
 msgid "The widget shows on single pages related posts by category"
 msgstr ""
+
+#: ../inc/widget/AuthorPosts.php:64
+#, php-format
+msgid "More posts from %s"
+msgstr "Weitere Beiträge von %s"
 
 #: ../inc/widget/AuthorPosts.php:145 ../inc/widget/RelatedPostsByCategory.php:135
 msgctxt "widget title label"
