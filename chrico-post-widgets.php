@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Chrico Related Posts
- * Description: This Plugin adds related posts-Widgets to your theme.
+ * Plugin Name: Chrico Post Widgets
+ * Description: This Plugin adds some posts-widgets to your theme.
  * Plugin URI:  https://www.chrico.info
  * Version:     0.1
  * Author:      Christian Brückner
  * Author URI:  https://www.chrico.info
  * Licence:     GPLv3
  */
-namespace ChriCo\RelatedPosts;
+namespace ChriCo\PostWidgets;
 
 if ( ! function_exists( 'add_filter' ) ) {
 	return;
@@ -41,10 +41,10 @@ function register_widgets() {
 
 	// ByCategory
 	include_once( __DIR__ . '/inc/widget/ByCategory.php' );
-	register_widget( '\ChriCo\RelatedPosts\Widget\ByCategory' );
+	register_widget( '\ChriCo\PostWidgets\Widget\ByCategory' );
 
 	// Author Posts
 	include_once( __DIR__ . '/inc/widget/AuthorPosts.php' );
-	register_widget( '\ChriCo\RelatedPosts\Widget\AuthorPosts' );
+	register_widget( '\ChriCo\PostWidgets\Widget\AuthorPosts' );
 
 }
